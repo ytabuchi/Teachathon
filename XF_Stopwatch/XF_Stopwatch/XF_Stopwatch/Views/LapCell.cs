@@ -16,11 +16,13 @@ namespace XF_Stopwatch.Views
             var numLabel = new Label
             {
                 HorizontalOptions = LayoutOptions.Start,
+                VerticalTextAlignment = TextAlignment.Center,
             };
             numLabel.SetBinding(Label.TextProperty, "LapNumber");
             var lapLabel = new Label
             {
                 HorizontalOptions = LayoutOptions.EndAndExpand,
+                VerticalTextAlignment = TextAlignment.Center,
             };
             lapLabel.SetBinding(Label.TextProperty, new Binding("LapTime", converter: new TimeConverter()));
 

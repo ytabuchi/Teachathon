@@ -8,7 +8,7 @@ using Xamarin.Forms;
 
 namespace XF_Stopwatch.Helpers
 {
-    class TimeConverter : IValueConverter
+    public class TimeConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -22,6 +22,7 @@ namespace XF_Stopwatch.Views
         long ms;
         long ss;
         long mm;
+        bool isInLoop = false;
 
         int lapNumber = 1;
 
@@ -31,7 +32,6 @@ namespace XF_Stopwatch.Views
             {
                 Text = "00'00\"000",
                 HorizontalTextAlignment = TextAlignment.Center,
-                //FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
                 FontSize = 50,
             };
 
@@ -40,6 +40,7 @@ namespace XF_Stopwatch.Views
                 ItemsSource = App.lapTimes,
                 ItemTemplate = new DataTemplate(typeof(LapCell)),
                 HorizontalOptions = LayoutOptions.Center,
+                SeparatorVisibility = SeparatorVisibility.None,
             };
 
             startButton = new Button
@@ -82,10 +83,12 @@ namespace XF_Stopwatch.Views
         {
             if (startButton.Text.ToLower() == "start" || startButton.Text.ToLower() == "restart")
             {
+                App.lapTimes.Clear();
                 startButton.Text = "Stop";
                 lapButton.IsEnabled = true;
                 sw.Reset();
                 sw.Start();
+                isInLoop = true;
 
                 Device.StartTimer(TimeSpan.FromMilliseconds(10), () =>
                 {
@@ -96,9 +99,9 @@ namespace XF_Stopwatch.Views
                     ss = ss % 60;
                     timeLabel.Text = string.Format("{0:00}'{1:00}\"{2:000}", mm, ss, ms);
 #if DEBUG
-                    System.Diagnostics.Debug.WriteLine(sw.ElapsedMilliseconds);
+                    Debug.WriteLine(sw.ElapsedMilliseconds);
 #endif
-                    return true;
+                    return isInLoop;
                 });
 
             }
@@ -109,18 +112,7 @@ namespace XF_Stopwatch.Views
                 sw.Stop();
                 Debug.WriteLine(sw.ElapsedMilliseconds);
 
-                Device.StartTimer(TimeSpan.FromMilliseconds(10), () =>
-                {
-                    ms = sw.ElapsedMilliseconds;
-                    ss = ms / 1000;
-                    ms = ms % 1000;
-                    mm = ss / 60;
-                    ss = ss % 60;
-                    timeLabel.Text = string.Format(@"{0:00}:{1:00}.{2:000}", mm, ss, ms);
-
-                    
-                    return false;
-                });
+                isInLoop = false;
             }
         }
 
@@ -142,10 +134,6 @@ namespace XF_Stopwatch.Views
                     lw.Restart();
                     lapNumber++;
                 }
-
-                
-                
-
             }
         }
 
