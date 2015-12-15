@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:XF_Stopwatch.ViewModels;assembly=XF_Stopwatch"
+             xmlns:cv="clr-namespace:XF_Stopwatch.Helpers;assembly=XF_Stopwatch"
+             x:Class="XF_Stopwatch.Views.MainPageXaml"
+             Title="Stopwatch">
+  <ContentPage.BindingContext>
+    <vm:MainViewModel />
+  </ContentPage.BindingContext>
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <cv:TimeConverter x:Key="timeConverter" />
+    </ResourceDictionary>
+  </ContentPage.Resources>
+
+  <StackLayout Padding="10" Spacing="20">
+    <Label Text="{Binding StopwatchMillseconds,
+           Converter={StaticResource timeConverter}"
+           HorizontalTextAlignment="Center"
+           FontSize="50" />
+    <StackLayout Orientation="Horizontal" Spacing="5">
+      <Button Text="Start" HorizontalOptions="FillAndExpand" Command="{Binding StartCommand}" />
+      <Button Text="Stop" HorizontalOptions="FillAndExpand" Command="{Binding StopCommand}" />
+      <Button Text="Lap" HorizontalOptions="FillAndExpand" Command="{Binding LapCommand}" />
+    </StackLayout>
+    <ListView ItemsSource="{Binding VmLapTimes}" VerticalOptions="FillAndExpand">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <ViewCell>
+            <StackLayout Orientation="Horizontal" Spacing="20">
+              <Label Text="{Binding LapNumber}" HorizontalOptions="Start" VerticalTextAlignment="Center" />
+              <Label Text="{Binding LapTime, Converter={StaticResource timeConverter}" HorizontalOptions="EndAndExpand" VerticalTextAlignment="Center" />
+            </StackLayout>
+          </ViewCell>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+  </StackLayout>
+</ContentPage>

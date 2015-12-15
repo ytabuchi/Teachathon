@@ -113,6 +113,18 @@ namespace XF_Stopwatch.Views
                 Debug.WriteLine(sw.ElapsedMilliseconds);
 
                 isInLoop = false;
+
+                ms = sw.ElapsedMilliseconds;
+                ss = ms / 1000;
+                ms = ms % 1000;
+                mm = ss / 60;
+                ss = ss % 60;
+                var alertTitle = string.Format("All time: {0:00}'{1:00}\"{2:000}", mm, ss, ms);
+
+                var max = App.lapTimes.Max(i => i.LapTime);
+                var min = App.lapTimes.Min(j => j.LapTime);
+
+                DisplayAlert(alertTitle, string.Format("Max laptime: {0}\nMin laptime: {1}", max, min), "OK");
             }
         }
 
