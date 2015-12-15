@@ -18,7 +18,7 @@ namespace XF_Stopwatch
         {
             lapTimes = new ObservableCollection<LapTimes>();
 
-            var nav = new NavigationPage(new MainPageXaml());
+            var nav = new NavigationPage(new MainPageCS());
             nav.BarBackgroundColor = Color.FromHex("3498DB");
             nav.BarTextColor = Color.White;
             MainPage = nav;
