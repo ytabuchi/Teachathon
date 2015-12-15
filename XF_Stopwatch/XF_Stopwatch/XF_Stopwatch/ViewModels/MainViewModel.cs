@@ -9,6 +9,7 @@ using Xamarin.Forms;
 using System.Windows.Input;
 using System.Diagnostics;
 using XF_Stopwatch.Models;
+using XF_Stopwatch.Views;
 
 namespace XF_Stopwatch.ViewModels
 {
@@ -44,12 +45,15 @@ namespace XF_Stopwatch.ViewModels
                 sw.Stop();
                 lw.Stop();
 
+                long ms;
                 if (lapNumber == 1)
-                    VmLapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = sw.ElapsedMilliseconds });
+                    ms = sw.ElapsedMilliseconds;
                 else
-                    VmLapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = lw.ElapsedMilliseconds });
+                    ms = lw.ElapsedMilliseconds;
+                
+                VmLapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = ms });
 
-
+                MessagingCenter.Send<MainViewModel, string>(this, "Hi", ms.ToString());
             });
 
             this.LapCommand = new Command(() =>
