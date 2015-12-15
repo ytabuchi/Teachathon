@@ -25,7 +25,7 @@ namespace XF_Stopwatch.ViewModels
 
             this.StartCommand = new Command(() =>
             {
-                VmLapTimes.Clear(); // ここで良い？
+                VmLapTimes.Clear();
                 sw.Reset();
                 sw.Start();
                 this.IsInLoop = true;
@@ -40,6 +40,16 @@ namespace XF_Stopwatch.ViewModels
             this.StopCommand = new Command(() =>
             {
                 this.IsInLoop = false;
+
+                sw.Stop();
+                lw.Stop();
+
+                if (lapNumber == 1)
+                    VmLapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = sw.ElapsedMilliseconds });
+                else
+                    VmLapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = lw.ElapsedMilliseconds });
+
+
             });
 
             this.LapCommand = new Command(() =>
@@ -60,9 +70,18 @@ namespace XF_Stopwatch.ViewModels
                     }
                 }
             });
+
+            this.StartStopCommand = new Command(p =>
+            {
+                if (p.ToString().ToLower() == "start")
+                    StartCommand.Execute(true);
+                else
+                    StopCommand.Execute(true);
+            });
         }
 
 
+        public ICommand StartStopCommand { protected set; get; }
         public ICommand StartCommand { protected set; get; }
         public ICommand StopCommand { protected set; get; }
         public ICommand LapCommand { protected set; get; }
@@ -81,6 +100,20 @@ namespace XF_Stopwatch.ViewModels
             }
         }
 
+        private string _buttonText = "Start"; // これ良いのかな？
+        public string ButtonText
+        {
+            get { return _buttonText; }
+            set
+            {
+                if (_buttonText != value)
+                {
+                    _buttonText = value;
+                    OnPropertyChanged("ButtonText");
+                }
+            }
+        }
+
         private bool _isInLoop;
         public bool IsInLoop
         {
@@ -91,8 +124,14 @@ namespace XF_Stopwatch.ViewModels
                 {
                     _isInLoop = value;
                     OnPropertyChanged("IsInLoop");
+                    this.ButtonText = changeText(_isInLoop);
                 }
             }
+        }
+
+        string changeText(bool b)
+        {
+            return b ? "Stop" : "Start";
         }
 
         private ObservableCollection<LapTimes> _vmLapTimes;

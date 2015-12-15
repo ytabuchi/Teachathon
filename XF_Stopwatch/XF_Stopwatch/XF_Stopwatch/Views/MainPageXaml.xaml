@@ -20,8 +20,7 @@
            HorizontalTextAlignment="Center"
            FontSize="50" />
     <StackLayout Orientation="Horizontal" Spacing="5">
-      <Button Text="Start" HorizontalOptions="FillAndExpand" Command="{Binding StartCommand}" />
-      <Button Text="Stop" HorizontalOptions="FillAndExpand" Command="{Binding StopCommand}" />
+      <Button Text="{Binding ButtonText}" HorizontalOptions="FillAndExpand" Command="{Binding StartStopCommand}" CommandParameter="{Binding ButtonText}" />
       <Button Text="Lap" HorizontalOptions="FillAndExpand" Command="{Binding LapCommand}" />
     </StackLayout>
     <ListView ItemsSource="{Binding VmLapTimes}" VerticalOptions="FillAndExpand" SeparatorVisibility="None">

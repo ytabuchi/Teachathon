@@ -114,6 +114,11 @@ namespace XF_Stopwatch.Views
 
                 isInLoop = false;
 
+                if (lapNumber == 1)
+                    App.lapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = sw.ElapsedMilliseconds });
+                else
+                    App.lapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = lw.ElapsedMilliseconds });
+
                 ms = sw.ElapsedMilliseconds;
                 ss = ms / 1000;
                 ms = ms % 1000;
