@@ -24,7 +24,7 @@
       <Button Text="Stop" HorizontalOptions="FillAndExpand" Command="{Binding StopCommand}" />
       <Button Text="Lap" HorizontalOptions="FillAndExpand" Command="{Binding LapCommand}" />
     </StackLayout>
-    <ListView ItemsSource="{Binding VmLapTimes}" VerticalOptions="FillAndExpand">
+    <ListView ItemsSource="{Binding VmLapTimes}" VerticalOptions="FillAndExpand" SeparatorVisibility="None">
       <ListView.ItemTemplate>
         <DataTemplate>
           <ViewCell>
