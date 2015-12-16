@@ -17,6 +17,8 @@ namespace XF_Stopwatch.Views
         {
             InitializeComponent();
 
+            // 参考：https://developer.xamarin.com/guides/cross-platform/xamarin-forms/messaging-center/
+            // 第2引数が同じSendとSubscribeでやり取りをするようです
             MessagingCenter.Subscribe<MainViewModel, ObservableCollection<LapTimes>>(this, "TotalTime", (sender, arg) =>
             {
                 var ms = arg.Sum(l => l.LapTime);

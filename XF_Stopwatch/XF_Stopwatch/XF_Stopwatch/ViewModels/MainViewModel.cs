@@ -15,20 +15,28 @@ namespace XF_Stopwatch.ViewModels
 {
     class MainViewModel : INotifyPropertyChanged
     {
-        
         Stopwatch sw = new Stopwatch();
         Stopwatch lw = new Stopwatch();
+        long ms;
         int lapNumber = 1;
 
+        /// <summary>
+        /// ViewModelコンストラクタ
+        /// 参考：https://github.com/ytabuchi/decode/blob/master/decode01/decode01/decode01/Page2Data.cs
+        /// </summary>
         public MainViewModel()
         {
             this.VmLapTimes = new ObservableCollection<LapTimes>();
 
+            // Commandの使用方法は以下を参考に
+            // 参考：https://developer.xamarin.com/guides/cross-platform/xamarin-forms/user-interface/xaml-basics/data_bindings_to_mvvm/#Commanding_with_ViewModels
             this.StartCommand = new Command(() =>
             {
                 VmLapTimes.Clear(); // UWPで"System.ArgumentOutOfRangeException"が出ます？
                 sw.Restart();
                 this.IsInLoop = true;
+
+                // 10ミリ秒ごとにチェックされ、trueな限り継続
                 Device.StartTimer(TimeSpan.FromMilliseconds(10), () =>
                 {
                     StopwatchMillseconds = sw.ElapsedMilliseconds;
@@ -39,19 +47,20 @@ namespace XF_Stopwatch.ViewModels
 
             this.StopCommand = new Command(() =>
             {
-                this.IsInLoop = false;
-
+                this.IsInLoop = false; // Device.StartTimerの次のチェック時に停止
                 sw.Stop();
                 lw.Stop();
 
-                long ms;
                 if (lapNumber == 1)
                     ms = sw.ElapsedMilliseconds;
                 else
                     ms = lw.ElapsedMilliseconds;
-                
+
                 VmLapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = ms });
 
+                // 参考：https://developer.xamarin.com/guides/cross-platform/xamarin-forms/messaging-center/
+                // 第2引数が同じSendとSubscribeでやり取りをするようです
+                // 何故簡略化できるのか不明
                 MessagingCenter.Send<MainViewModel, ObservableCollection<LapTimes>>(this, "TotalTime", VmLapTimes);
             });
 
@@ -60,20 +69,17 @@ namespace XF_Stopwatch.ViewModels
                 if (sw.ElapsedMilliseconds > 0)
                 {
                     if (lapNumber == 1)
-                    {
-                        VmLapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = sw.ElapsedMilliseconds });
-                        lw.Start();
-                        lapNumber++;
-                    }
+                        ms = sw.ElapsedMilliseconds;
                     else
-                    {
-                        VmLapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = lw.ElapsedMilliseconds });
-                        lw.Restart();
-                        lapNumber++;
-                    }
+                        ms = lw.ElapsedMilliseconds;
+
+                    VmLapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = ms });
+                    lw.Restart();
+                    lapNumber++;
                 }
             });
 
+            // 参考：https://developer.xamarin.com/api/type/Xamarin.Forms.Command/
             this.StartStopCommand = new Command(p =>
             {
                 if (p.ToString().ToLower() == "start")
@@ -127,12 +133,12 @@ namespace XF_Stopwatch.ViewModels
                 {
                     _isInLoop = value;
                     OnPropertyChanged("IsInLoop");
-                    this.ButtonText = changeText(_isInLoop);
+                    this.ButtonText = changeText(_isInLoop); // Viewに影響を与えてるけど良いのかな？
                 }
             }
         }
 
-        string changeText(bool b)
+        private string changeText(bool b)
         {
             return b ? "Stop" : "Start";
         }

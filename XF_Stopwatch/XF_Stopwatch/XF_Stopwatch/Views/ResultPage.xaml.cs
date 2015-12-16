@@ -17,7 +17,5 @@ namespace XF_Stopwatch.Views
             InitializeComponent();
             this.BindingContext = lapTimes;
         }
-
-
     }
 }

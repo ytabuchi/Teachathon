@@ -64,7 +64,7 @@ namespace XF_Stopwatch.Views
                 Text = "View Result",
                 IsVisible = false,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
-                Command = new Command(() => Navigation.PushAsync(new ResultPage(App.lapTimes)))
+                Command = new Command(() => Navigation.PushAsync(new ResultPage(App.lapTimes))) //ResultPageにコレクションを渡してます
             };
 
             Title = "Stopwatch Event base";
@@ -94,12 +94,13 @@ namespace XF_Stopwatch.Views
         {
             if (startButton.Text.ToLower() == "start" || startButton.Text.ToLower() == "restart")
             {
-                App.lapTimes.Clear();
+                App.lapTimes.Clear(); // UWPで"System.ArgumentOutOfRangeException"が出ます？
                 startButton.Text = "Stop";
                 lapButton.IsEnabled = true;
                 sw.Restart();
                 isInLoop = true;
 
+                // 10ミリ秒ごとにチェックされ、trueな限り継続
                 Device.StartTimer(TimeSpan.FromMilliseconds(10), () =>
                 {
                     ms = sw.ElapsedMilliseconds;

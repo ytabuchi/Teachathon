@@ -17,7 +17,7 @@ namespace XF_Stopwatch.Views
             {
                 Children = {
                     new Button {
-                        Text = "Eventdriven",
+                        Text = "Event base",
                         Command = new Command(()=>
                         {
                             Navigation.PushAsync(new MainPageCS());
