@@ -19,6 +19,7 @@ namespace XF_Stopwatch.Views
                 VerticalTextAlignment = TextAlignment.Center,
             };
             numLabel.SetBinding(Label.TextProperty, "LapNumber");
+
             var lapLabel = new Label
             {
                 HorizontalOptions = LayoutOptions.EndAndExpand,

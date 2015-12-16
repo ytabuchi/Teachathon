@@ -13,10 +13,11 @@ namespace XF_Stopwatch.Views
     public class MainPageCS : ContentPage
     {
         Label timeLabel;
-        ListView lapList;
         Button startButton;
         Button lapButton;
-        
+        ListView lapList;
+        Button resultButton;
+
         Stopwatch sw = new Stopwatch();
         Stopwatch lw = new Stopwatch();
         long ms;
@@ -35,20 +36,13 @@ namespace XF_Stopwatch.Views
                 FontSize = 50,
             };
 
-            lapList = new ListView
-            {
-                ItemsSource = App.lapTimes,
-                ItemTemplate = new DataTemplate(typeof(LapCell)),
-                HorizontalOptions = LayoutOptions.Center,
-                SeparatorVisibility = SeparatorVisibility.None,
-            };
-
             startButton = new Button
             {
                 Text = "Start",
                 HorizontalOptions = LayoutOptions.FillAndExpand,
             };
             startButton.Clicked += StartButton_Clicked;
+
             lapButton = new Button
             {
                 Text = "Lap",
@@ -57,7 +51,23 @@ namespace XF_Stopwatch.Views
             };
             lapButton.Clicked += LapButton_Clicked;
 
-            Title = "Stopwatch";
+            lapList = new ListView
+            {
+                ItemsSource = App.lapTimes,
+                ItemTemplate = new DataTemplate(typeof(LapCell)), // Cell定義
+                HorizontalOptions = LayoutOptions.Center,
+                SeparatorVisibility = SeparatorVisibility.None,
+            };
+
+            resultButton = new Button
+            {
+                Text = "View Result",
+                IsVisible = false,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                Command = new Command(() => Navigation.PushAsync(new ResultPage(App.lapTimes)))
+            };
+
+            Title = "Stopwatch Event base";
             Content = new StackLayout
             {
                 Padding = 10,
@@ -75,6 +85,7 @@ namespace XF_Stopwatch.Views
                         },
                     },
                     lapList,
+                    resultButton,
                 },
             };
         }
@@ -86,8 +97,7 @@ namespace XF_Stopwatch.Views
                 App.lapTimes.Clear();
                 startButton.Text = "Stop";
                 lapButton.IsEnabled = true;
-                sw.Reset();
-                sw.Start();
+                sw.Restart();
                 isInLoop = true;
 
                 Device.StartTimer(TimeSpan.FromMilliseconds(10), () =>
@@ -98,9 +108,7 @@ namespace XF_Stopwatch.Views
                     mm = ss / 60;
                     ss = ss % 60;
                     timeLabel.Text = string.Format("{0:00}'{1:00}\"{2:000}", mm, ss, ms);
-#if DEBUG
-                    Debug.WriteLine(sw.ElapsedMilliseconds);
-#endif
+
                     return isInLoop;
                 });
 
@@ -109,9 +117,9 @@ namespace XF_Stopwatch.Views
             {
                 startButton.Text = "Restart";
                 lapButton.IsEnabled = false;
+                resultButton.IsVisible = true;
                 sw.Stop();
-                Debug.WriteLine(sw.ElapsedMilliseconds);
-
+                lw.Stop();
                 isInLoop = false;
 
                 if (lapNumber == 1)
@@ -129,7 +137,7 @@ namespace XF_Stopwatch.Views
                 var max = App.lapTimes.Max(i => i.LapTime);
                 var min = App.lapTimes.Min(j => j.LapTime);
 
-                DisplayAlert(alertTitle, string.Format("Max laptime: {0}\nMin laptime: {1}", max, min), "OK");
+                DisplayAlert(alertTitle, string.Format("Max laptime: {0}ms\nMin laptime: {1}ms", max, min), "OK");
             }
         }
 
@@ -138,21 +146,14 @@ namespace XF_Stopwatch.Views
             if (sw.ElapsedMilliseconds > 0)
             {
                 if (lapNumber == 1)
-                {
                     ms = sw.ElapsedMilliseconds;
-                    App.lapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = ms });
-                    lw.Start();
-                    lapNumber++;
-                }
                 else
-                {
                     ms = lw.ElapsedMilliseconds;
-                    App.lapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = ms });
-                    lw.Restart();
-                    lapNumber++;
-                }
+
+                App.lapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = ms });
+                lw.Restart();
+                lapNumber++;
             }
         }
-
     }
 }

@@ -26,9 +26,8 @@ namespace XF_Stopwatch.ViewModels
 
             this.StartCommand = new Command(() =>
             {
-                VmLapTimes.Clear();
-                sw.Reset();
-                sw.Start();
+                VmLapTimes.Clear(); // UWPで"System.ArgumentOutOfRangeException"が出ます？
+                sw.Restart();
                 this.IsInLoop = true;
                 Device.StartTimer(TimeSpan.FromMilliseconds(10), () =>
                 {
@@ -53,7 +52,7 @@ namespace XF_Stopwatch.ViewModels
                 
                 VmLapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = ms });
 
-                MessagingCenter.Send<MainViewModel, string>(this, "Hi", ms.ToString());
+                MessagingCenter.Send<MainViewModel, ObservableCollection<LapTimes>>(this, "TotalTime", VmLapTimes);
             });
 
             this.LapCommand = new Command(() =>

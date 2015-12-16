@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
+using XF_Stopwatch.Models;
 
 namespace XF_Stopwatch.Views
 {
-    public partial class LapListViewPage : ContentPage
+    public partial class ResultPage : ContentPage
     {
-        public LapListViewPage()
+        public ResultPage(ObservableCollection<LapTimes> lapTimes)
         {
             InitializeComponent();
+            this.BindingContext = lapTimes;
         }
 
 
