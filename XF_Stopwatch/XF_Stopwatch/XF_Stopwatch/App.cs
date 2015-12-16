@@ -13,10 +13,12 @@ namespace XF_Stopwatch
     public class App : Application
     {
         public static ObservableCollection<LapTimes> lapTimes { get; set; }
+        public static bool isShowed { get; set; }
 
         public App()
         {
             lapTimes = new ObservableCollection<LapTimes>();
+            isShowed = true;
 
             var nav = new NavigationPage(new StartPage());
             nav.BarBackgroundColor = Color.FromHex("3498DB");

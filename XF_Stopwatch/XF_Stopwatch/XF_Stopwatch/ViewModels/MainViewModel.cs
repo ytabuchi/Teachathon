@@ -90,10 +90,10 @@ namespace XF_Stopwatch.ViewModels
         }
 
 
-        public ICommand StartStopCommand { protected set; get; }
         public ICommand StartCommand { protected set; get; }
         public ICommand StopCommand { protected set; get; }
         public ICommand LapCommand { protected set; get; }
+        public ICommand StartStopCommand { protected set; get; }
 
         private long _stopwatchMilliseconds;
         public long StopwatchMillseconds
@@ -142,6 +142,24 @@ namespace XF_Stopwatch.ViewModels
         {
             return b ? "Stop" : "Start";
         }
+
+
+        // TODO：これを参照できるように…
+        //private bool _isShowed = true;
+        //public bool IsShowed
+        //{
+        //    get { return _isShowed; }
+        //    set
+        //    {
+        //        if (_isShowed != value)
+        //        {
+        //            _isShowed = value;
+        //            OnPropertyChanged("IsShowed");
+        //        }
+        //    }
+        //}
+
+
 
         private ObservableCollection<LapTimes> _vmLapTimes;
         public ObservableCollection<LapTimes> VmLapTimes

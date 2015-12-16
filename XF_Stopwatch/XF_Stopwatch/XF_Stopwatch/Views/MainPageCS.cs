@@ -15,8 +15,9 @@ namespace XF_Stopwatch.Views
         Label timeLabel;
         Button startButton;
         Button lapButton;
+        Label switchLabel;
+        Switch decimalSwitch;
         ListView lapList;
-        Button resultButton;
 
         Stopwatch sw = new Stopwatch();
         Stopwatch lw = new Stopwatch();
@@ -51,20 +52,23 @@ namespace XF_Stopwatch.Views
             };
             lapButton.Clicked += LapButton_Clicked;
 
+            switchLabel = new Label
+            {
+                Text = "Show decimal point",
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+            };
+            decimalSwitch = new Switch
+            {
+                IsToggled = true,
+            };
+            decimalSwitch.Toggled += DecimalSwitch_Toggled;
+
             lapList = new ListView
             {
                 ItemsSource = App.lapTimes,
                 ItemTemplate = new DataTemplate(typeof(LapCell)), // Cell定義
                 HorizontalOptions = LayoutOptions.Center,
                 SeparatorVisibility = SeparatorVisibility.None,
-            };
-
-            resultButton = new Button
-            {
-                Text = "View Result",
-                IsVisible = false,
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                Command = new Command(() => Navigation.PushAsync(new ResultPage(App.lapTimes))) //ResultPageにコレクションを渡してます
             };
 
             Title = "Stopwatch Event base";
@@ -84,17 +88,26 @@ namespace XF_Stopwatch.Views
                             lapButton,
                         },
                     },
+                    new StackLayout
+                    {
+                        Orientation = StackOrientation.Horizontal,
+                        Children =
+                        {
+                            switchLabel,
+                            decimalSwitch,
+                        },
+                    },
                     lapList,
-                    resultButton,
                 },
             };
         }
 
-        private void StartButton_Clicked(object sender, EventArgs e)
+        private async void StartButton_Clicked(object sender, EventArgs e)
         {
             if (startButton.Text.ToLower() == "start" || startButton.Text.ToLower() == "restart")
             {
                 App.lapTimes.Clear(); // UWPで"System.ArgumentOutOfRangeException"が出ます？
+                lapNumber = 1;
                 startButton.Text = "Stop";
                 lapButton.IsEnabled = true;
                 sw.Restart();
@@ -108,17 +121,19 @@ namespace XF_Stopwatch.Views
                     ms = ms % 1000;
                     mm = ss / 60;
                     ss = ss % 60;
-                    timeLabel.Text = string.Format("{0:00}'{1:00}\"{2:000}", mm, ss, ms);
+
+                    if (decimalSwitch.IsToggled)
+                        timeLabel.Text = string.Format("{0:00}'{1:00}\"{2:000}", mm, ss, ms);
+                    else
+                        timeLabel.Text = string.Format("{0:00}'{1:00}\"", mm, ss);
 
                     return isInLoop;
                 });
-
             }
             else
             {
                 startButton.Text = "Restart";
                 lapButton.IsEnabled = false;
-                resultButton.IsVisible = true;
                 sw.Stop();
                 lw.Stop();
                 isInLoop = false;
@@ -133,12 +148,27 @@ namespace XF_Stopwatch.Views
                 ms = ms % 1000;
                 mm = ss / 60;
                 ss = ss % 60;
-                var alertTitle = string.Format("All time: {0:00}'{1:00}\"{2:000}", mm, ss, ms);
+
+                string alertTitle;
+                if (decimalSwitch.IsToggled)
+                    alertTitle = string.Format("All time: {0:00}'{1:00}\"{2:000}", mm, ss, ms);
+                else
+                    alertTitle = string.Format("All time: {0:00}'{1:00}\"", mm, ss);
 
                 var max = App.lapTimes.Max(i => i.LapTime);
                 var min = App.lapTimes.Min(j => j.LapTime);
 
-                DisplayAlert(alertTitle, string.Format("Max laptime: {0}ms\nMin laptime: {1}ms", max, min), "OK");
+                var res = await DisplayAlert(alertTitle, string.Format("Max laptime: {0}ms\nMin laptime: {1}ms\n\nShow all lap result?", max, min), "Yes", "No");
+
+                if (res)
+                    await Navigation.PushAsync(new ResultPage(App.lapTimes));
+                else
+                {
+                    App.lapTimes.Clear(); // UWPで"System.ArgumentOutOfRangeException"が出ます？
+                    lapNumber = 1;
+                    startButton.Text = "Start";
+                    timeLabel.Text = "00'00\"000";
+                }
             }
         }
 
@@ -156,5 +186,13 @@ namespace XF_Stopwatch.Views
                 lapNumber++;
             }
         }
+
+        private void DecimalSwitch_Toggled(object sender, ToggledEventArgs e)
+        {
+            App.isShowed = ((Switch)sender).IsToggled;
+
+            // ここに多分各種コントロールのフォーマットを変更する処理を追加する？
+        }
+
     }
 }

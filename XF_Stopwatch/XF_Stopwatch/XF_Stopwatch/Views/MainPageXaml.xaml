@@ -15,11 +15,17 @@
   </ContentPage.Resources>
 
   <StackLayout Padding="10" Spacing="20">
-    <Label Text="{Binding StopwatchMillseconds, Converter={StaticResource timeConverter}" HorizontalTextAlignment="Center" FontSize="50" />
+    <Label Text="{Binding StopwatchMillseconds, Converter={StaticResource timeConverter}}" HorizontalTextAlignment="Center" FontSize="50" />
     <StackLayout Orientation="Horizontal" Spacing="5">
       <Button Text="{Binding ButtonText}" HorizontalOptions="FillAndExpand" Command="{Binding StartStopCommand}" CommandParameter="{Binding ButtonText}" />
       <Button Text="Lap" HorizontalOptions="FillAndExpand" Command="{Binding LapCommand}" />
     </StackLayout>
+    <!-- TODO: Bindig IsShowdをどうにかする
+    <StackLayout Orientation="Horizontal">
+      <Label Text="Show decimal point" HorizontalOptions="FillAndExpand" />
+      <Switch IsToggled="{Binding IsShowed}" />
+    </StackLayout>
+    -->
     <ListView ItemsSource="{Binding VmLapTimes}" VerticalOptions="FillAndExpand" SeparatorVisibility="None">
       <ListView.ItemTemplate>
         <DataTemplate>

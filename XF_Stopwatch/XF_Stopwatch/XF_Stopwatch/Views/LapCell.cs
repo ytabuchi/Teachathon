@@ -25,7 +25,7 @@ namespace XF_Stopwatch.Views
                 HorizontalOptions = LayoutOptions.EndAndExpand,
                 VerticalTextAlignment = TextAlignment.Center,
             };
-            lapLabel.SetBinding(Label.TextProperty, new Binding("LapTime", converter: new TimeConverter()));
+            lapLabel.SetBinding(Label.TextProperty, new Binding("LapTime", converter: new TimeConverter(), converterParameter: App.isShowed));
 
             View = new StackLayout
             {
