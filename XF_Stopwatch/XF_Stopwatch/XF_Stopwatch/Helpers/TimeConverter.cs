@@ -23,11 +23,11 @@ namespace XF_Stopwatch.Helpers
             ss = ss % 60;
 
             // TODO: ParameterでBinding IsShowedを取得
-            if (System.Convert.ToBoolean(parameter))
-                return string.Format("{0:00}'{1:00}\"{2:000}", mm, ss, ms);
-            else
-                return string.Format("{0:00}'{1:00}\"", mm, ss);
-            //return string.Format("{0:00}'{1:00}\"{2:000}", mm, ss, ms);
+            //if (System.Convert.ToBoolean(parameter))
+            //    return string.Format("{0:00}'{1:00}\"{2:000}", mm, ss, ms);
+            //else
+            //    return string.Format("{0:00}'{1:00}\"", mm, ss);
+            return string.Format("{0:00}'{1:00}\"{2:000}", mm, ss, ms);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

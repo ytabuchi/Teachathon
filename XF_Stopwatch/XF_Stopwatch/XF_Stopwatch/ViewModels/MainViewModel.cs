@@ -33,6 +33,7 @@ namespace XF_Stopwatch.ViewModels
             this.StartCommand = new Command(() =>
             {
                 VmLapTimes.Clear(); // UWPで"System.ArgumentOutOfRangeException"が出ます？
+                this.lapNumber = 1;
                 sw.Restart();
                 this.IsInLoop = true;
 
