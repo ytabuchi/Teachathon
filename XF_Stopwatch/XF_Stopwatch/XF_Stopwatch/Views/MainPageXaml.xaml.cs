@@ -20,6 +20,7 @@ namespace XF_Stopwatch.Views
             // 参考：https://developer.xamarin.com/guides/cross-platform/xamarin-forms/messaging-center/
             // 第2引数が同じSendとSubscribeでやり取りをするようです
             // ここにこんなに盛り込んでいいのか？
+            // App.ChangeFormatはApp.isShowedを参照してしまっている…
             MessagingCenter.Subscribe<MainViewModel, ObservableCollection<LapTimes>>(this, "TotalTime", async (sender, arg) =>
             {
                 var ms = arg.Sum(l => l.LapTime);
