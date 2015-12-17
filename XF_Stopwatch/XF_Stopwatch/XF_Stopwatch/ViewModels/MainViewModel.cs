@@ -18,6 +18,8 @@ namespace XF_Stopwatch.ViewModels
         Stopwatch sw = new Stopwatch();
         Stopwatch lw = new Stopwatch();
         long ms;
+        long ss;
+        long mm;
         int lapNumber = 1;
 
         /// <summary>
@@ -26,6 +28,7 @@ namespace XF_Stopwatch.ViewModels
         /// </summary>
         public MainViewModel()
         {
+            // App.lapTimesを出来れば使いたい。使い方は？
             this.VmLapTimes = new ObservableCollection<LapTimes>();
 
             // Commandの使用方法は以下を参考に
@@ -96,6 +99,7 @@ namespace XF_Stopwatch.ViewModels
         public ICommand LapCommand { protected set; get; }
         public ICommand StartStopCommand { protected set; get; }
 
+
         private long _stopwatchMilliseconds;
         public long StopwatchMillseconds
         {
@@ -106,11 +110,27 @@ namespace XF_Stopwatch.ViewModels
                 {
                     _stopwatchMilliseconds = value;
                     OnPropertyChanged("StopwatchMillseconds");
+                    this.StopwatchText = ChangeFormat(_stopwatchMilliseconds, _isShowed);
                 }
             }
         }
 
-        private string _buttonText = "Start"; // これ良いのかな？
+        private string _stopwatchText = "00'00\"000";
+        public string StopwatchText
+        {
+            get { return _stopwatchText; }
+            set
+            {
+                if (_stopwatchText != value)
+                {
+                    _stopwatchText = value;
+                    OnPropertyChanged("StopwatchText");
+                }
+            }
+        }
+
+
+        private string _buttonText = "Start";
         public string ButtonText
         {
             get { return _buttonText; }
@@ -139,29 +159,38 @@ namespace XF_Stopwatch.ViewModels
             }
         }
 
-        private string changeText(bool b)
+        private string changeText(bool loop)
         {
-            return b ? "Stop" : "Start";
+            return loop ? "Stop" : "Start";
         }
 
+        private bool _isShowed = true;
+        public bool IsShowed
+        {
+            get { return _isShowed; }
+            set
+            {
+                if (_isShowed != value)
+                {
+                    _isShowed = value;
+                    OnPropertyChanged("IsShowed");
+                    this.StopwatchText = ChangeFormat(_stopwatchMilliseconds, _isShowed);
+                }
+            }
+        }
 
-        // TODO：これを参照できるように…
-        //private bool _isShowed = true;
-        //public bool IsShowed
-        //{
-        //    get { return _isShowed; }
-        //    set
-        //    {
-        //        if (_isShowed != value)
-        //        {
-        //            _isShowed = value;
-        //            OnPropertyChanged("IsShowed");
-        //        }
-        //    }
-        //}
+        // TODO：どうやってLapTimeに反映させるか？
+        private string ChangeFormat(long ms, bool show)
+        {
+            ss = ms / 1000;
+            ms = ms % 1000;
+            mm = ss / 60;
+            ss = ss % 60;
 
+            return show ? string.Format("{0:00}'{1:00}\"{2:000}", mm, ss, ms) : string.Format("{0:00}'{1:00}\"", mm, ss);
+        }
 
-
+        // TODO：LapTimeのValueにChangeFormatを噛ませたい
         private ObservableCollection<LapTimes> _vmLapTimes;
         public ObservableCollection<LapTimes> VmLapTimes
         {

@@ -17,7 +17,7 @@
         <ViewCell>
           <StackLayout Orientation="Horizontal" Spacing="20">
             <Label Text="{Binding LapNumber}" HorizontalOptions="Start" VerticalTextAlignment="Center" />
-            <Label Text="{Binding LapTime, Converter={StaticResource timeConverter}" HorizontalOptions="EndAndExpand" VerticalTextAlignment="Center" />
+            <Label Text="{Binding LapTime, Converter={StaticResource timeConverter}, ConverterParameter=True}" HorizontalOptions="EndAndExpand" VerticalTextAlignment="Center" />
           </StackLayout>
         </ViewCell>
       </DataTemplate>

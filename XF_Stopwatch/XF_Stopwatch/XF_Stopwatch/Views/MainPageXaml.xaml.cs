@@ -19,20 +19,24 @@ namespace XF_Stopwatch.Views
 
             // 参考：https://developer.xamarin.com/guides/cross-platform/xamarin-forms/messaging-center/
             // 第2引数が同じSendとSubscribeでやり取りをするようです
-            MessagingCenter.Subscribe<MainViewModel, ObservableCollection<LapTimes>>(this, "TotalTime", (sender, arg) =>
+            // ここにこんなに盛り込んでいいのか？
+            MessagingCenter.Subscribe<MainViewModel, ObservableCollection<LapTimes>>(this, "TotalTime", async (sender, arg) =>
             {
                 var ms = arg.Sum(l => l.LapTime);
-                var ss = ms / 1000;
-                ms = ms % 1000;
-                var mm = ss / 60;
-                ss = ss % 60;
 
-                var max = arg.Max(i => i.LapTime);
-                var min = arg.Min(j => j.LapTime);
+                var max = App.ChangeFormat(arg.Max(i => i.LapTime));
+                var min = App.ChangeFormat(arg.Min(j => j.LapTime));
 
-                var alertTitle = string.Format("Total Time: {0:00}'{1:00}\"{2:000}", mm, ss, ms);
+                var alertTitle = string.Format("Total Time: {0}",App.ChangeFormat(ms));
 
-                DisplayAlert(alertTitle, string.Format("Max laptime: {0}ms\nMin laptime: {1}ms", max, min), "OK");
+                var res = await DisplayAlert(alertTitle, string.Format("Max laptime: {0}\nMin laptime: {1}\n\nShow all lap result?", max, min), "Yes", "No");
+
+                if (res)
+                    await Navigation.PushAsync(new ResultPage(App.lapTimes)); // TODO：VMのVmLapTimesを参照したい。して良い？出来る？
+                else
+                {
+                    App.lapTimes.Clear(); // TODO：VMのVmLapTimesを参照したい。して良い？出来る？
+                }
             });
         }
     }

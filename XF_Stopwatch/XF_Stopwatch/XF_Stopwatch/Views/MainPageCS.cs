@@ -106,7 +106,7 @@ namespace XF_Stopwatch.Views
         {
             if (startButton.Text.ToLower() == "start" || startButton.Text.ToLower() == "restart")
             {
-                App.lapTimes.Clear(); // UWPで"System.ArgumentOutOfRangeException"が出ます？
+                App.lapTimes.Clear(); // UWPで"System.ArgumentOutOfRangeException"が出ます
                 lapNumber = 1;
                 startButton.Text = "Stop";
                 lapButton.IsEnabled = true;
@@ -116,16 +116,7 @@ namespace XF_Stopwatch.Views
                 // 10ミリ秒ごとにチェックされ、trueな限り継続
                 Device.StartTimer(TimeSpan.FromMilliseconds(10), () =>
                 {
-                    ms = sw.ElapsedMilliseconds;
-                    ss = ms / 1000;
-                    ms = ms % 1000;
-                    mm = ss / 60;
-                    ss = ss % 60;
-
-                    if (decimalSwitch.IsToggled)
-                        timeLabel.Text = string.Format("{0:00}'{1:00}\"{2:000}", mm, ss, ms);
-                    else
-                        timeLabel.Text = string.Format("{0:00}'{1:00}\"", mm, ss);
+                    timeLabel.Text = App.ChangeFormat(sw.ElapsedMilliseconds);
 
                     return isInLoop;
                 });
@@ -144,27 +135,16 @@ namespace XF_Stopwatch.Views
                     App.lapTimes.Add(new LapTimes { LapNumber = lapNumber, LapTime = lw.ElapsedMilliseconds });
 
                 ms = sw.ElapsedMilliseconds;
-                ss = ms / 1000;
-                ms = ms % 1000;
-                mm = ss / 60;
-                ss = ss % 60;
 
-                string alertTitle;
-                if (decimalSwitch.IsToggled)
-                    alertTitle = string.Format("All time: {0:00}'{1:00}\"{2:000}", mm, ss, ms);
-                else
-                    alertTitle = string.Format("All time: {0:00}'{1:00}\"", mm, ss);
-
-                var max = App.lapTimes.Max(i => i.LapTime);
-                var min = App.lapTimes.Min(j => j.LapTime);
-
-                var res = await DisplayAlert(alertTitle, string.Format("Max laptime: {0}ms\nMin laptime: {1}ms\n\nShow all lap result?", max, min), "Yes", "No");
+                var max = App.ChangeFormat(App.lapTimes.Max(i => i.LapTime));
+                var min = App.ChangeFormat(App.lapTimes.Min(j => j.LapTime));
+                var res = await DisplayAlert(App.ChangeFormat(ms), string.Format("Max laptime: {0}\nMin laptime: {1}\n\nShow all lap result?", max, min), "Yes", "No");
 
                 if (res)
                     await Navigation.PushAsync(new ResultPage(App.lapTimes));
                 else
                 {
-                    App.lapTimes.Clear(); // UWPで"System.ArgumentOutOfRangeException"が出ます？
+                    App.lapTimes.Clear();
                     lapNumber = 1;
                     startButton.Text = "Start";
                     timeLabel.Text = "00'00\"000";
@@ -192,7 +172,20 @@ namespace XF_Stopwatch.Views
             App.isShowed = ((Switch)sender).IsToggled;
 
             // ここに多分各種コントロールのフォーマットを変更する処理を追加する？
+
         }
 
+        //private string ChangeFormat(long ms)
+        //{
+        //    ss = ms / 1000;
+        //    ms = ms % 1000;
+        //    mm = ss / 60;
+        //    ss = ss % 60;
+
+        //    if (App.isShowed)
+        //        return string.Format("{0:00}'{1:00}\"{2:000}", mm, ss, ms);
+        //    else
+        //        return string.Format("{0:00}'{1:00}\"", mm, ss);
+        //}
     }
 }

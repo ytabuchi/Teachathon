@@ -15,6 +15,23 @@ namespace XF_Stopwatch
         public static ObservableCollection<LapTimes> lapTimes { get; set; }
         public static bool isShowed { get; set; }
 
+        // こんなのあり？
+        static long ss;
+        static long mm;
+        public static string ChangeFormat(long ms)
+        {
+            ss = ms / 1000;
+            ms = ms % 1000;
+            mm = ss / 60;
+            ss = ss % 60;
+
+            if (isShowed)
+                return string.Format("{0:00}'{1:00}\"{2:000}", mm, ss, ms);
+            else
+                return string.Format("{0:00}'{1:00}\"", mm, ss);
+
+        }
+
         public App()
         {
             lapTimes = new ObservableCollection<LapTimes>();
@@ -40,5 +57,6 @@ namespace XF_Stopwatch
         {
             // Handle when your app resumes
         }
+
     }
 }

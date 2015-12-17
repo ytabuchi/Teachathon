@@ -17,5 +17,12 @@ namespace XF_Stopwatch.Views
             InitializeComponent();
             this.BindingContext = lapTimes;
         }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            App.lapTimes.Clear();
+
+        }
     }
 }
