@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:XF_Stopwatch.ViewModels;assembly=XF_Stopwatch"
+             xmlns:cv="clr-namespace:XF_Stopwatch.Helpers;assembly=XF_Stopwatch"
+             x:Class="XF_Stopwatch.Views.MainPageXaml"
+             Title="Stopwatch Mvvm">
+  <ContentPage.BindingContext>
+    <vm:MainViewModel />
+  </ContentPage.BindingContext>
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <cv:TimeConverter x:Key="timeConverter" />
+    </ResourceDictionary>
+  </ContentPage.Resources>
+
+  <StackLayout Padding="10" Spacing="20">
+    <Label Text="{Binding StopwatchText}" HorizontalTextAlignment="Center" FontSize="50" />
+    <StackLayout Orientation="Horizontal" Spacing="5">
+      <Button Text="{Binding ButtonText}" HorizontalOptions="FillAndExpand" Command="{Binding StartStopCommand}" CommandParameter="{Binding ButtonText}" />
+      <Button Text="Lap" HorizontalOptions="FillAndExpand" Command="{Binding LapCommand}" IsEnabled="{Binding IsInLoop}" />
+    </StackLayout>
+    <StackLayout Orientation="Horizontal">
+      <Label Text="Show decimal point" HorizontalOptions="FillAndExpand" />
+      <Switch IsToggled="{Binding IsShowed}" />
+    </StackLayout>
+    <ListView ItemsSource="{Binding VmLapTimes}" VerticalOptions="FillAndExpand" SeparatorVisibility="None">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <ViewCell>
+            <StackLayout Orientation="Horizontal" Spacing="20">
+              <Label Text="{Binding LapNumber}" HorizontalOptions="Start" VerticalTextAlignment="Center" />
+              <Label Text="{Binding LapTime, Converter={StaticResource timeConverter}, ConverterParameter=True}" HorizontalOptions="EndAndExpand" VerticalTextAlignment="Center" />
+            </StackLayout>
+          </ViewCell>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+  </StackLayout>
+</ContentPage>

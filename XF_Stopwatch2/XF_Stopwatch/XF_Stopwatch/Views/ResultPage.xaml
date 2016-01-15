@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cv="clr-namespace:XF_Stopwatch.Helpers;assembly=XF_Stopwatch"
+             x:Class="XF_Stopwatch.Views.ResultPage"
+             Padding="20"
+             Title="Lap Results">
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <cv:TimeConverter x:Key="timeConverter" />
+    </ResourceDictionary>
+  </ContentPage.Resources>
+  
+  <ListView ItemsSource="{Binding}" VerticalOptions="FillAndExpand">
+    <ListView.ItemTemplate>
+      <DataTemplate>
+        <ViewCell>
+          <StackLayout Orientation="Horizontal" Spacing="20">
+            <Label Text="{Binding LapNumber}" HorizontalOptions="Start" VerticalTextAlignment="Center" />
+            <Label Text="{Binding LapTime, Converter={StaticResource timeConverter}, ConverterParameter=True}" HorizontalOptions="EndAndExpand" VerticalTextAlignment="Center" />
+          </StackLayout>
+        </ViewCell>
+      </DataTemplate>
+    </ListView.ItemTemplate>
+  </ListView>
+</ContentPage>
