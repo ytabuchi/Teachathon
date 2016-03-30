@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace XF_Stopwatch.Models
 {
-    class LapTime
+    public class LapTime
     {
-        public TimeSpan Span { get; }
-        public DateTime Time { get; }
+        public DateTime Time { get; set; }
+        public TimeSpan Span { get; set; }
 
         public LapTime(DateTime time, TimeSpan span)
         {
