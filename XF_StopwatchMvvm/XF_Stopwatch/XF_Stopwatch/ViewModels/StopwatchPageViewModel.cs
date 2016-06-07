@@ -13,34 +13,6 @@ namespace XF_Stopwatch.ViewModels
 {
     public class StopwatchPageViewModel : INotifyPropertyChanged
     {
-        //private string _spanTime = "00:00.0000";
-        //public string SpanTime
-        //{
-        //    get { return _spanTime; }
-        //    set
-        //    {
-        //        if (_spanTime != value)
-        //        {
-        //            _spanTime = value;
-        //            OnPropertyChanged();
-        //        }
-        //    }
-        //}
-
-        private TimeSpan _spanTime;
-        public TimeSpan SpanTime
-        {
-            get { return _spanTime; }
-            set
-            {
-                if (_spanTime != value)
-                {
-                    _spanTime = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
         private ObservableCollection<LapTime> _lapTimes;
         public ObservableCollection<LapTime> LapTimes
         {
@@ -69,8 +41,26 @@ namespace XF_Stopwatch.ViewModels
             }
         }
 
+        private TimeSpan _spanTime;
+        public TimeSpan SpanTime
+        {
+            get
+            {
+                return _spanTime;
+            }
+            set
+            {
+                if (_spanTime != value)
+                {
+                    _spanTime = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public StopwatchPageViewModel()
         {
+            SingletonStopwatchModel.Instance.LapTimes.Clear();
             SingletonStopwatchModel.Instance.PropertyChanged += Instance_PropertyChanged;
 
             this.StartCommand = new Command(() =>
@@ -84,6 +74,10 @@ namespace XF_Stopwatch.ViewModels
             {
                 System.Diagnostics.Debug.WriteLine("【StopCommand】");
                 SingletonStopwatchModel.Instance.StopTimer();
+                //this.SpanTime = SingletonStopwatchModel.Instance.LapTimes.Last().LapSpan;
+
+                var totalTime = SingletonStopwatchModel.Instance.GetTotalTime();
+                MessagingCenter.Send<StopwatchPageViewModel, string>(this, "ShowDialog", totalTime);
             });
 
             this.LapCommand = new Command(() =>

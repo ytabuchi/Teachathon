@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XF_Stopwatch.Views.SummaryPage"
+             Title="Summary Page">
+  <StackLayout>
+    <StackLayout Orientation="Horizontal"
+                 HorizontalOptions="FillAndExpand">
+      <Button Text="Ascending"
+              Command="{Binding AscendingSortCommand}"
+              />
+      <Button Text="Desending"
+              Command="{Binding DescendingSortCommand}"
+              />
+    </StackLayout>
+    <ListView ItemsSource="{Binding LapTimes}"
+              HasUnevenRows="True">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <ViewCell>
+            <Grid Padding="5, 10">
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+              </Grid.RowDefinitions>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+              </Grid.ColumnDefinitions>
+              
+              <Label Text="Lap"
+                     FontSize="12"
+                     TextColor="#cccccc"/>
+              <Label Grid.Column="1"
+                     Text="LapTime"
+                     FontSize="12"
+                     TextColor="#cccccc"/>
+              <Label Grid.Row="1"
+                     Text="{Binding Lap, StringFormat='Lap{0}'}"
+                     FontSize="16"
+                     TextColor="#555555"/>
+              <Label Grid.Row="1"
+                     Grid.Column="1"
+                     Text="{Binding LapSpan, StringFormat='{0:mm\\:ss\\.fff}'}"
+                     FontSize="16"
+                     TextColor="#555555"/>
+              
+            </Grid>
+          </ViewCell>
+          <!--<TextCell Text="{Binding Lap, StringFormat='Lap{0}'}" 
+                    Detail="{Binding LapSpan, StringFormat='{0:mm\\:ss\\.fff}'}"/>-->
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+  </StackLayout>
+</ContentPage>

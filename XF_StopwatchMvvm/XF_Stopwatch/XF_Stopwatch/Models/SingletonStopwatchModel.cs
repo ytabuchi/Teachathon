@@ -86,19 +86,20 @@ namespace XF_Stopwatch.Models
 
 
         /// <summary>
-        /// Starts the timer.
+        /// Start the timer.
         /// </summary>
-        /// <returns>The timer.</returns>
         public void StartTimer()
         {
             System.Diagnostics.Debug.WriteLine("【StartTimer()】");
 
-            this.LapTimes.Clear(); // Initialize
+            // Initialize
+            _count = 0;
+            this.LapTimes.Clear();
             _loop = true;
-
             _nowTime = DateTime.Now;
             _startTime = _nowTime;
 
+            // Start timer and loop
             _task = new Task(async () =>
             {
                 while (_loop)
@@ -120,7 +121,7 @@ namespace XF_Stopwatch.Models
 
             _loop = false;
             _count++;
-            this.LapTimes.Add(new LapTime(_count, this.StartTime, this.NowTime, this.SpanTime));
+            this.LapTimes.Insert(0, new LapTime(_count, this.StartTime, this.NowTime, this.SpanTime));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LapTimes)));
         }
 
@@ -129,10 +130,23 @@ namespace XF_Stopwatch.Models
             System.Diagnostics.Debug.WriteLine("【LapTimer()】");
 
             _count++;
-            this.LapTimes.Add(new LapTime(_count, this.StartTime, this.NowTime, this.SpanTime));
+            this.LapTimes.Insert(0, new LapTime(_count, this.StartTime, this.NowTime, this.SpanTime));
             this.StartTime = DateTime.Now;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LapTimes)));
         }
+
+        public string GetTotalTime()
+        {
+            System.Diagnostics.Debug.WriteLine("【GetTotalTime()】");
+            var totalMilliSeconds = Instance.LapTimes.Sum(x => x.LapSpan.TotalMilliseconds);
+
+            var totaltTimeSpan = new TimeSpan(
+                0, 0, 0, 0, (int)totalMilliSeconds);
+            return totaltTimeSpan.ToString();
+
+        }
+
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
 
