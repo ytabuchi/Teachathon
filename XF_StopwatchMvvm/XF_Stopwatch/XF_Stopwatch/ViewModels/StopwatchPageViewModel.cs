@@ -41,8 +41,8 @@ namespace XF_Stopwatch.ViewModels
             }
         }
 
-        private TimeSpan _spanTime;
-        public TimeSpan SpanTime
+        private string _spanTime;
+        public string SpanTime
         {
             get
             {
@@ -97,11 +97,11 @@ namespace XF_Stopwatch.ViewModels
             switch (e.PropertyName)
             {
                 case nameof(SingletonStopwatchModel.SpanTime):
-                    this.SpanTime = SingletonStopwatchModel.Instance.SpanTime;
-                    //if (IsRounded)
-                    //    this.SpanTime = SingletonStopwatchModel.Instance.SpanTime.ToString(@"mm\:ss");
-                    //else
-                    //    this.SpanTime = SingletonStopwatchModel.Instance.SpanTime.ToString(@"mm\:ss\.ffff");
+                    //this.SpanTime = SingletonStopwatchModel.Instance.SpanTime;
+                    if (IsRounded)
+                        this.SpanTime = SingletonStopwatchModel.Instance.SpanTime.ToString(@"mm\:ss");
+                    else
+                        this.SpanTime = SingletonStopwatchModel.Instance.SpanTime.ToString(@"mm\:ss\.ffff");
                     break;
                 case nameof(SingletonStopwatchModel.LapTimes):
                     this.LapTimes = SingletonStopwatchModel.Instance.LapTimes;

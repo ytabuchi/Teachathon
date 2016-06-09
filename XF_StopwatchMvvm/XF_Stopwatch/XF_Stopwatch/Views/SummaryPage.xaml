@@ -3,15 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="XF_Stopwatch.Views.SummaryPage"
              Title="Summary Page">
-  <StackLayout>
+  <StackLayout Padding="10">
     <StackLayout Orientation="Horizontal"
                  HorizontalOptions="FillAndExpand">
       <Button Text="Ascending"
               Command="{Binding AscendingSortCommand}"
-              />
+              HorizontalOptions="FillAndExpand"/>
       <Button Text="Desending"
               Command="{Binding DescendingSortCommand}"
-              />
+              HorizontalOptions="FillAndExpand"/>
     </StackLayout>
     <ListView ItemsSource="{Binding LapTimes}"
               HasUnevenRows="True">
@@ -47,8 +47,6 @@
               
             </Grid>
           </ViewCell>
-          <!--<TextCell Text="{Binding Lap, StringFormat='Lap{0}'}" 
-                    Detail="{Binding LapSpan, StringFormat='{0:mm\\:ss\\.fff}'}"/>-->
         </DataTemplate>
       </ListView.ItemTemplate>
     </ListView>
