@@ -24,9 +24,21 @@ namespace XF_Stopwatch.Models
 
         }
 
-        private Task _task;
-        private bool _loop = false;
         private int _count = 0;
+
+        private bool _isInLoop = false;
+        public bool IsInLoop
+        {
+            get { return _isInLoop; }
+            set
+            {
+                if (_isInLoop != value)
+                {
+                    _isInLoop = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         private ObservableCollection<LapTime> _lapTimes = new ObservableCollection<LapTime>();
         public ObservableCollection<LapTime> LapTimes
@@ -84,42 +96,52 @@ namespace XF_Stopwatch.Models
             }
         }
 
+        private bool _isRounded;
+        public bool IsRounded
+        {
+            get { return _isRounded; }
+            set
+            {
+                if (_isRounded != value)
+                {
+                    _isRounded = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
 
         /// <summary>
         /// Start the timer.
         /// </summary>
-        public void StartTimer()
+        public async Task StartTimer()
         {
             System.Diagnostics.Debug.WriteLine("【StartTimer()】");
 
             // Initialize
             _count = 0;
             this.LapTimes.Clear();
-            _loop = true;
+            _isInLoop = true;
             _nowTime = DateTime.Now;
             _startTime = _nowTime;
 
             // Start timer and loop
-            _task = new Task(async () =>
+            while (_isInLoop)
             {
-                while (_loop)
-                {
-                    await Task.Delay(100);
-                    _nowTime = DateTime.Now;
-                    this.SpanTime = _nowTime - _startTime;
+                await Task.Delay(100);
+                _nowTime = DateTime.Now;
+                this.SpanTime = _nowTime - _startTime;
 
-                    System.Diagnostics.Debug.WriteLine(
-                        $"【InLoop】Start:{this.StartTime}, Now:{this.NowTime}, Span:{this.SpanTime}");
-                }
-            });
-            _task.Start();
+                System.Diagnostics.Debug.WriteLine(
+                    $"【InLoop】Start:{this.StartTime}, Now:{this.NowTime}, Span:{this.SpanTime}");
+            }
         }
 
         public void StopTimer()
         {
             System.Diagnostics.Debug.WriteLine("【StopTimer()】");
 
-            _loop = false;
+            _isInLoop = false;
             _count++;
             this.LapTimes.Insert(0, new LapTime(_count, this.StartTime, this.NowTime, this.SpanTime));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LapTimes)));
@@ -138,12 +160,11 @@ namespace XF_Stopwatch.Models
         public string GetTotalTime()
         {
             System.Diagnostics.Debug.WriteLine("【GetTotalTime()】");
+
             var totalMilliSeconds = Instance.LapTimes.Sum(x => x.LapSpan.TotalMilliseconds);
 
-            var totaltTimeSpan = new TimeSpan(
-                0, 0, 0, 0, (int)totalMilliSeconds);
+            var totaltTimeSpan = new TimeSpan(0, 0, 0, 0, (int)totalMilliSeconds);
             return totaltTimeSpan.ToString();
-
         }
 
         

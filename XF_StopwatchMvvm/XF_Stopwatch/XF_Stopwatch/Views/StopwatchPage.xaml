@@ -1,58 +1,78 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="XF_Stopwatch.Views.StopwatchPage"
-             Title="Mvvm Stopwatch">
-  <StackLayout VerticalOptions="Center">
-    <Label Text="{Binding SpanTime, StringFormat='{0:mm\\:ss\\.fff}'}" 
-           HorizontalTextAlignment="Center" 
-           FontSize="40" 
-           Margin="0,10,0,5" />
-    <StackLayout Orientation="Horizontal" 
-                 Padding="10,0,10,0">
-      <Label Text="Round" 
-             TextColor="#666666" 
-             HorizontalOptions="EndAndExpand" 
-             VerticalTextAlignment="Center" />
-      <Switch IsToggled="{Binding IsRounded}" 
-              HorizontalOptions="End" 
-              VerticalOptions="Center" />
-    </StackLayout>
-    <StackLayout Orientation="Horizontal"
-                 Padding="10,0,10,0">
-      <Button Text="Start" 
-              Command="{Binding StartCommand}" 
-              HorizontalOptions="FillAndExpand" />
-      <Button Text="Stop" 
-              Command="{Binding StopCommand}" 
-              HorizontalOptions="FillAndExpand" />
-      <Button Text="Lap" 
-              Command="{Binding LapCommand}" 
-              HorizontalOptions="FillAndExpand" />
-    </StackLayout>
-    <ListView ItemsSource="{Binding LapTimes}" 
-              SeparatorColor="#EEEEEE" 
-              RowHeight="50"
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage
+	xmlns="http://xamarin.com/schemas/2014/forms"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	x:Class="XF_Stopwatch.Views.StopwatchPage"
+	Title="Mvvm Stopwatch">
+	<StackLayout
+		VerticalOptions="Center">
+		<Label
+			Text="{Binding SpanTime}"
+			HorizontalTextAlignment="Center"
+			FontSize="40"
+			Margin="0,10,0,5" />
+		<StackLayout
+			Orientation="Horizontal"
+			Padding="10,0,10,0">
+			<Label
+				Text="Round"
+				TextColor="#666666"
+				HorizontalOptions="EndAndExpand"
+				VerticalTextAlignment="Center" />
+			<Switch
+				IsToggled="{Binding IsRounded}"
+
+				HorizontalOptions="End"
+				VerticalOptions="Center" />
+		</StackLayout>
+		<StackLayout
+			Orientation="Horizontal"
+			Padding="10,0,10,0">
+			<Button
+				Text="Start"
+				Command="{Binding StartCommand}"
+				HorizontalOptions="FillAndExpand" />
+			<Button
+				Text="Stop"
+				Command="{Binding StopCommand}"
+				HorizontalOptions="FillAndExpand"
+				 />
+			<Button
+				Text="Lap"
+				Command="{Binding LapCommand}"
+				HorizontalOptions="FillAndExpand"
+				 />
+		</StackLayout>
+		<ListView
+			ItemsSource="{Binding LapTimes}"
+			SeparatorColor="#EEEEEE"
+			RowHeight="50"
 			VerticalOptions="FillAndExpand">
-      <ListView.ItemTemplate>
-        <DataTemplate>
-          <ViewCell>
-            <StackLayout Orientation="Horizontal" 
-                         Padding="18,0,10,5">
-              <Label Text="{Binding Lap, StringFormat='Lap{0}'}" 
-                     HorizontalOptions="StartAndExpand" 
-                     VerticalTextAlignment="End" 
-                     TextColor="#aaaaaa" 
-                     FontSize="12" />
-              <Label Text="{Binding LapSpan, StringFormat='{0:mm\\:ss\\.fff}'}" 
-                     HorizontalOptions="End" 
-                     VerticalTextAlignment="End" 
-                     TextColor="#555555" 
-                     FontSize="18" />
-            </StackLayout>
-          </ViewCell>
-        </DataTemplate>
-      </ListView.ItemTemplate>
-    </ListView>
-  </StackLayout>
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<ViewCell>
+						<StackLayout
+							Orientation="Horizontal"
+							Padding="18,0,10,5">
+							<Label
+								Text="{Binding Lap, StringFormat='Lap{0}'}"
+								HorizontalOptions="StartAndExpand"
+								VerticalTextAlignment="End"
+								TextColor="#aaaaaa"
+								FontSize="12" />
+							<Label
+								Text="{Binding LapSpan}"
+								HorizontalOptions="End"
+								VerticalTextAlignment="End"
+								TextColor="#555555"
+								FontSize="18" />
+							<!-- StringFormat='{0:mm\\:ss\\.ffff}' -->
+							<!-- Converter={StaticResource roundConverter},
+										ConverterParameter=True} -->
+						</StackLayout>
+					</ViewCell>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+	</StackLayout>
 </ContentPage>

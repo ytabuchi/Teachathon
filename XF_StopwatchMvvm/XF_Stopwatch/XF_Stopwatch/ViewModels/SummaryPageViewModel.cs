@@ -55,15 +55,6 @@ namespace XF_Stopwatch.ViewModels
         public ICommand AscendingSortCommand { get; private set; }
         public ICommand DescendingSortCommand { get; private set; }
 
-        //private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        //{
-        //    //System.Diagnostics.Debug.WriteLine(e.PropertyName);
-        //    switch (e.PropertyName)
-        //    {
-        //        default:
-        //            break;
-        //    }
-        //}
 
         public event PropertyChangedEventHandler PropertyChanged;
 

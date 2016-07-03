@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Xamarin.Forms;
 
 namespace XF_Stopwatch
 {
-    public class App : Application
+    public partial class App : Application
     {
         public App()
         {
+            InitializeComponent();
+
             var nav = new NavigationPage(new Views.StopwatchPage());
             if (Device.OS == TargetPlatform.iOS)
                 nav.BarBackgroundColor = Color.FromHex("#b765b8");
@@ -38,3 +38,4 @@ namespace XF_Stopwatch
         }
     }
 }
+
